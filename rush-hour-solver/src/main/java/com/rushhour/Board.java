@@ -3,6 +3,7 @@ package com.rushhour;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Rush Hour Board, with default and explicit value constructor.
@@ -24,7 +25,7 @@ public class Board {
   // Explicit value constructor for custom board with no cars
   public Board(int N, int exitXPosition, int exitYPosition) {
     // Verify that N is positive
-    if (this.N <= 0) {
+    if (N <= 0) {
       throw new IllegalArgumentException("N must be greater than 0");
     }
 
@@ -67,7 +68,7 @@ public class Board {
       }
       for (int i = 1; i < numberOfCars; i++) {
         otherCar = this.cars.get(i);
-        if (targetCar.yPosition() == otherCar.yPosition() &&
+        if (otherCar.isHorizontal() && targetCar.yPosition() == otherCar.yPosition() &&
           Math.abs(this.exitXPosition - otherCar.xPosition()) < Math.abs(this.exitXPosition - targetCar.xPosition())) {
           throw new RuntimeException("Car collection contains a car between target car and exit with same orientation");
         }
@@ -79,7 +80,7 @@ public class Board {
       }
       for (int i = 1; i < numberOfCars; i++) {
         otherCar = this.cars.get(i);
-        if (targetCar.xPosition() == otherCar.xPosition() &&
+        if (!otherCar.isHorizontal() && targetCar.xPosition() == otherCar.xPosition() &&
           Math.abs(this.exitYPosition - otherCar.yPosition()) < Math.abs(this.exitYPosition - targetCar.yPosition())) {
           throw new RuntimeException("Car collection contains a car between target car and exit with same orientation");
         }
@@ -115,7 +116,7 @@ public class Board {
       }
       for (int i = 1; i < numberOfCars; i++) {
         otherCar = this.cars.get(i);
-        if (targetCar.yPosition() == otherCar.yPosition() &&
+        if (otherCar.isHorizontal() && targetCar.yPosition() == otherCar.yPosition() &&
           Math.abs(this.exitXPosition - otherCar.xPosition()) < Math.abs(this.exitXPosition - targetCar.xPosition())) {
           throw new RuntimeException("Car collection contains a car between target car and exit with same orientation");
         }
@@ -127,12 +128,33 @@ public class Board {
       }
       for (int i = 1; i < numberOfCars; i++) {
         otherCar = this.cars.get(i);
-        if (targetCar.xPosition() == otherCar.xPosition() &&
+        if (!otherCar.isHorizontal() && targetCar.xPosition() == otherCar.xPosition() &&
           Math.abs(this.exitYPosition - otherCar.yPosition()) < Math.abs(this.exitYPosition - targetCar.yPosition())) {
           throw new RuntimeException("Car collection contains a car between target car and exit with same orientation");
         }
       }
     }
+  }
+
+  // Hash code generation function
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.N, this.exitXPosition, this.exitYPosition, this.cars);
+  }
+
+  // Equality operator override
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || this.getClass() != obj.getClass()) {
+      return false;
+    }
+
+    Board otherBoard = (Board) obj;
+    return this.N == otherBoard.N() && this.exitXPosition == otherBoard.exitXPosition() &&
+      this.exitYPosition == otherBoard.exitYPosition() && this.cars.equals(otherBoard.cars());
   }
 
   // Helper function to verify that the exit is on the perimeter of the board
