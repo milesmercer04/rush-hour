@@ -46,7 +46,7 @@ public class Board {
     this.cars = new ArrayList<>(cars);
 
     // Verify that cars collection contains at least the target car
-    if (this.cars.isEmpty()) {
+    if (cars == null || this.cars.isEmpty()) {
       throw new IllegalArgumentException("Cars collection must contain at least 1 car");
     }
 
@@ -94,7 +94,7 @@ public class Board {
     this.cars = new ArrayList<>(cars);
 
     // Verify that cars collection contains at least the target car
-    if (this.cars.isEmpty()) {
+    if (cars == null || this.cars.isEmpty()) {
       throw new IllegalArgumentException("Cars collection must contain at least 1 car");
     }
 
@@ -136,6 +136,17 @@ public class Board {
     }
   }
 
+  // Copy constructor
+  public Board(Board otherBoard) {
+    this.N = otherBoard.N();
+    this.exitXPosition = otherBoard.exitXPosition();
+    this.exitYPosition = otherBoard.exitYPosition();
+    this.cars = new ArrayList<>(otherBoard.cars().size());
+    for (Car c : otherBoard.cars()) {
+      this.cars.add(new Car(c));
+    }
+  }
+
   // Hash code generation function
   @Override
   public int hashCode() {
@@ -155,6 +166,26 @@ public class Board {
     Board otherBoard = (Board) obj;
     return this.N == otherBoard.N() && this.exitXPosition == otherBoard.exitXPosition() &&
       this.exitYPosition == otherBoard.exitYPosition() && this.cars.equals(otherBoard.cars());
+  }
+
+  // Calculate distance between this board and another board (returns null if different number of
+  // cars or cars misaligned, dimensions and exit assumed identical)
+  public Integer distanceFrom(Board otherBoard) {
+    int numberOfCars = this.cars.size();
+    if (numberOfCars != otherBoard.cars().size()) {
+      return null;
+    }
+    int totalDistance = 0;
+    Integer individualDistance;
+    for (int i = 0; i < numberOfCars; i++) {
+      individualDistance = this.cars.get(i).distanceFrom(otherBoard.cars().get(i));
+      if (individualDistance != null) {
+        totalDistance += individualDistance;
+      } else {
+        return null;
+      }
+    }
+    return totalDistance;
   }
 
   // Helper function to verify that the exit is on the perimeter of the board

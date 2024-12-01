@@ -183,4 +183,48 @@ public class BoardTest {
       new Board(7, 6, 2, List.of(new Car(1, 2, 2, true), new Car(1, 3, 3, false)));
     });
   }
+
+  @Test
+  void twoDefaultBoardsAreEqualTest() {
+    Board a = new Board();
+    Board b = new Board();
+    assertTrue(a.hashCode() == b.hashCode());
+    assertTrue(a.equals(b));
+    assertTrue(b.equals(a));
+  }
+
+  @Test
+  void twoCustomEmptyBoardsAreEqualTest() {
+    Board a = new Board(4, 3, 2);
+    Board b = new Board(4, 3, 2);
+    assertTrue(a.hashCode() == b.hashCode());
+    assertTrue(a.equals(b));
+    assertTrue(b.equals(a));
+  }
+
+  @Test
+  void twoIdenticalBoardsAreEqual() {
+    Board a = new Board(List.of(new Car(1, 2, 2, true), new Car(4, 3, 2, false)));
+    Board b = new Board(List.of(new Car(1, 2, 2, true), new Car(4, 3, 2, false)));
+    assertTrue(a.hashCode() == b.hashCode());
+    assertTrue(a.equals(b));
+    assertTrue(b.equals(a));
+  }
+
+  @Test
+  void boardsOfDifferentDimensionsAreNotEqual() {
+    Board a = new Board();
+    Board b = new Board(7, 6, 2);
+    assertFalse(a.hashCode() == b.hashCode());
+    assertFalse(a.equals(b));
+    assertFalse(b.equals(a));
+  }
+
+  @Test
+  void boardNotEqualToBoardWithCarMovedForward() {
+    Board a = new Board(List.of(new Car(1, 2, 2, true)));
+    Board b = new Board(a);
+    b.cars().get(0).moveForward();
+    assertFalse(a.equals(b));
+  }
 }

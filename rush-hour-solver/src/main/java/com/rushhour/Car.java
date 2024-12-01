@@ -25,6 +25,14 @@ public class Car {
     this.isHorizontal = isHorizontal;
   }
 
+  // Copy constructor
+  public Car(Car otherCar) {
+    this.xPosition = otherCar.xPosition();
+    this.yPosition = otherCar.yPosition();
+    this.length = otherCar.length();
+    this.isHorizontal = otherCar.isHorizontal();
+  }
+
   // Hash code generation function
   @Override
   public int hashCode() {
@@ -74,6 +82,21 @@ public class Car {
         return (this.yPosition - this.length + 1 <= otherCar.yPosition() && otherCar.yPosition() <= this.yPosition) ||
           (otherCar.yPosition() - otherCar.length() + 1 <= this.yPosition && this.yPosition <= otherCar.yPosition());
       }
+    }
+  }
+
+  // Calculate the distance between this car and another (returns null if the cars are misaligned)
+  public Integer distanceFrom(Car otherCar) {
+    if (this.isHorizontal) {
+      if (!otherCar.isHorizontal() || this.yPosition != otherCar.yPosition()) {
+        return null;
+      }
+      return Math.abs(this.xPosition - otherCar.xPosition());
+    } else {
+      if (otherCar.isHorizontal() || this.xPosition != otherCar.xPosition()) {
+        return null;
+      }
+      return Math.abs(this.yPosition - otherCar.yPosition());
     }
   }
 
