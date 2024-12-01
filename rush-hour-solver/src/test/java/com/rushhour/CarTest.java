@@ -25,6 +25,17 @@ public class CarTest {
   }
 
   @Test
+  void copyConstructorTest() {
+    Car a = new Car();
+    Car b = new Car(a);
+    a.moveForward();
+    assertEquals(1, b.xPosition());
+    assertEquals(0, b.yPosition());
+    assertEquals(2, b.length());
+    assertEquals(true, b.isHorizontal());
+  }
+
+  @Test
   void differentCarDifferentHashCodeTest() {
     Car a = new Car();
     Car b = new Car(1, 1, 2, true);
@@ -134,5 +145,47 @@ public class CarTest {
     assertEquals(1, c.yPosition());
     assertEquals(2, c.length());
     assertEquals(false, c.isHorizontal());
+  }
+
+  @Test
+  void twoHorizontalCarsDistanceTest() {
+    Car a = new Car(1, 3, 2, true);
+    Car b = new Car(a);
+    b.moveForward();
+    b.moveForward();
+    assertEquals(2, a.distanceFrom(b));
+    assertEquals(2, b.distanceFrom(a));
+  }
+
+  @Test
+  void twoVerticalCarsDistanceTest() {
+    Car a = new Car(3, 2, 3, false);
+    Car b = new Car(3, 5, 3, false);
+    assertEquals(3, a.distanceFrom(b));
+    assertEquals(3, b.distanceFrom(a));
+  }
+
+  @Test
+  void horizontalAndVerticalCarDistanceTest() {
+    Car a = new Car();
+    Car b = new Car(3, 4, 2, false);
+    assertEquals(null, a.distanceFrom(b));
+    assertEquals(null, b.distanceFrom(a));
+  }
+
+  @Test
+  void misalignedHorizontalCarsDistanceTest() {
+    Car a = new Car();
+    Car b = new Car(1, 3, 2, true);
+    assertEquals(null, a.distanceFrom(b));
+    assertEquals(null, b.distanceFrom(a));
+  }
+
+  @Test
+  void misalignedVerticalCarsDistanceTest() {
+    Car a = new Car(2, 1, 2, false);
+    Car b = new Car(4, 3, 2, false);
+    assertEquals(null, a.distanceFrom(b));
+    assertEquals(null, b.distanceFrom(a));
   }
 }

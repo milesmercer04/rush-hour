@@ -185,6 +185,21 @@ public class BoardTest {
   }
 
   @Test
+  void copyConstructorTest() {
+    Board a = new Board(List.of(new Car(1, 2, 2, true)));
+    Board b = new Board(a);
+    a.cars().get(0).moveForward();
+    assertEquals(6, b.N());
+    assertEquals(5, b.exitXPosition());
+    assertEquals(2, b.exitYPosition());
+    assertEquals(1, b.cars().size());
+    assertEquals(1, b.cars().get(0).xPosition());
+    assertEquals(2, b.cars().get(0).yPosition());
+    assertEquals(2, b.cars().get(0).length());
+    assertEquals(true, b.cars().get(0).isHorizontal());
+  }
+
+  @Test
   void twoDefaultBoardsAreEqualTest() {
     Board a = new Board();
     Board b = new Board();
@@ -226,5 +241,20 @@ public class BoardTest {
     Board b = new Board(a);
     b.cars().get(0).moveForward();
     assertFalse(a.equals(b));
+  }
+
+  @Test
+  void distanceTest() {
+    ArrayList<Car> cars = new ArrayList<>();
+    for (int i = 2; i < 6; i++) {
+      cars.add(new Car(2, i, 2, true));
+    }
+    Board a = new Board(cars);
+    Board b = new Board(a);
+    b.cars().get(0).moveForward();
+    b.cars().get(0).moveForward();
+    b.cars().get(3).moveBackward();
+    assertEquals(3, a.distanceFrom(b));
+    assertEquals(3, b.distanceFrom(a));
   }
 }

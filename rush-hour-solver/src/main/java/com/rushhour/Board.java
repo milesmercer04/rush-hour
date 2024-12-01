@@ -235,6 +235,114 @@ public class Board {
     return targetCar.xPosition() == this.exitXPosition && targetCar.yPosition() == this.exitYPosition;
   }
 
+  // Function to evaluate whether a particular move is possible
+  public boolean moveIsPossible(int carIndex, boolean movingForward) {
+    if (carIndex < 0 || carIndex >= this.cars.size()) {
+      return false;
+    }
+    Car movingCar = this.cars.get(carIndex);
+    if (movingForward) {
+      movingCar.moveForward();
+      if (this.validateCars()) {
+        movingCar.moveBackward();
+        return true;
+      } else {
+        movingCar.moveBackward();
+        return false;
+      }
+    } else {
+      movingCar.moveBackward();
+      if (this.validateCars()) {
+        movingCar.moveForward();
+        return true;
+      } else {
+        movingCar.moveForward();
+        return false;
+      }
+    }
+  }
+
+  // Function to try a move, returning a copy of the board reflecting the move if possible and null
+  // otherwise
+  public Board tryMove(int carIndex, boolean movingForward) {
+    if (carIndex < 0 || carIndex >= this.cars.size()) {
+      return null;
+    }
+    Car movingCar = this.cars.get(carIndex);
+    Board newBoard;
+    if (movingForward) {
+      movingCar.moveForward();
+      if (this.validateCars()) {
+        newBoard = new Board(this);
+        movingCar.moveBackward();
+        return newBoard;
+      } else {
+        movingCar.moveBackward();
+        return null;
+      }
+    } else {
+      movingCar.moveBackward();
+      if (this.validateCars()) {
+        newBoard = new Board(this);
+        movingCar.moveForward();
+        return newBoard;
+      } else {
+        movingCar.moveForward();
+        return null;
+      }
+    }
+  }
+
+  // Function to add a car to the board
+  public void addCar(Car newCar) {
+    this.cars.add(newCar);
+    if (!validateCars()) {
+      throw new RuntimeException("Inserted car conflicts with an existing car");
+    }
+  }
+
+  // Function to remove a car from the board
+  public Car removeCar(int carIndex) {
+    if (carIndex < 0 || carIndex >= this.cars.size()) {
+      return null;
+    }
+    Car removedCar = this.cars.remove(carIndex);
+    if (carIndex == 0) {
+      int numberOfCars = this.cars.size();
+      if (numberOfCars == 0) {
+        throw new RuntimeException("Board must contain a target car");
+      }
+      Car targetCar = this.cars.get(0);
+      Car otherCar;
+      if (targetCar.isHorizontal()) {
+        // Target car is horizontal
+        if (targetCar.yPosition() != this.exitYPosition) {
+          throw new RuntimeException("Target car is not in line with board exit");
+        }
+        for (int i = 1; i < numberOfCars; i++) {
+          otherCar = this.cars.get(i);
+          if (otherCar.isHorizontal() && targetCar.yPosition() == otherCar.yPosition() &&
+            Math.abs(this.exitXPosition - otherCar.xPosition()) < Math.abs(this.exitXPosition - targetCar.xPosition())) {
+            throw new RuntimeException("Car collection contains a car between target car and exit with same orientation");
+          }
+        }
+      } else {
+        // Target car is vertical
+        if (targetCar.xPosition() != this.exitXPosition) {
+          throw new RuntimeException("Target car is not in line with board exit");
+        }
+        for (int i = 1; i < numberOfCars; i++) {
+          otherCar = this.cars.get(i);
+          if (!otherCar.isHorizontal() && targetCar.xPosition() == otherCar.xPosition() &&
+            Math.abs(this.exitYPosition - otherCar.yPosition()) < Math.abs(this.exitYPosition - targetCar.yPosition())) {
+            throw new RuntimeException("Car collection contains a car between target car and exit with same orientation");
+          }
+        }
+      }
+    }
+    return removedCar;
+  }
+
   // Getter function for N
   public int N() {
     return this.N;
