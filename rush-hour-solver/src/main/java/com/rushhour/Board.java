@@ -293,12 +293,37 @@ public class Board {
     }
   }
 
+  // Function to test if it's possible to add a car to the board without conflict
+  public boolean canAddCar(Car newCar) {
+    this.cars.add(newCar);
+    if (this.validateCars()) {
+      this.cars.remove(newCar);
+      return true;
+    } else {
+      this.cars.remove(newCar);
+      return false;
+    }
+  }
+
   // Function to add a car to the board
   public void addCar(Car newCar) {
     this.cars.add(newCar);
     if (!validateCars()) {
       throw new RuntimeException("Inserted car conflicts with an existing car");
     }
+  }
+
+  // Function to try to add a car to the board, returning a new board reflecting the adition if
+  // possible and null otherwise
+  public Board tryAddCar(Car newCar) {
+    this.cars.add(newCar);
+    if (!this.validateCars()) {
+      this.cars.remove(newCar);
+      return null;
+    }
+    Board newBoard = new Board(this);
+    this.cars.remove(newCar);
+    return newBoard;
   }
 
   // Function to remove a car from the board
