@@ -192,6 +192,20 @@ public final class Board {
     return totalDistance;
   }
 
+  // Calculate distance between this board and the closest board among a collection of boards
+  // (returns null if all boards in collection incompatible)
+  public Integer minimumDistanceFrom(Collection<Board> otherBoards) {
+    Integer minimumDistance = null;
+    Integer distance;
+    for (Board b : otherBoards) {
+      distance = this.distanceFrom(b);
+      if (distance != null && (minimumDistance == null || distance < minimumDistance)) {
+        minimumDistance = distance;
+      }
+    }
+    return minimumDistance;
+  }
+
   // Helper function to verify that the exit is on the perimeter of the board
   private boolean validateExitPosition() {
     return this.exitXPosition == 0 || this.exitXPosition == this.N - 1 ||

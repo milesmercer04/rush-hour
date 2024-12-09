@@ -16,6 +16,9 @@ public class BreadthFirstSolver implements Solver {
     if (initialState == null) {
       throw new IllegalArgumentException("Initial state cannot be null");
     }
+    if (!initialState.validateCars()) {
+      throw new IllegalArgumentException("Initial state contains a positional conflict");
+    }
     this.initialState = initialState;
     this.visited = new HashSet<>();
     visited.add(initialState);

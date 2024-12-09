@@ -149,6 +149,16 @@ public class Car {
     this.yPosition = newYPosition;
   }
 
+  // Manually change car's x position
+  public void changeXPosition(int newXPosition) {
+    this.xPosition = newXPosition;
+  }
+
+  // Manually change car's y position
+  public void changeYPosition(int newYPosition) {
+    this.yPosition = newYPosition;
+  }
+
   // Manually change the car's length
   public void changeLength(int newLength) {
     this.length = newLength;
