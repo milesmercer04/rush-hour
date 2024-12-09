@@ -12,7 +12,7 @@ import java.util.Objects;
  * horizontal and vertical). The board is able to test its equality to and distance from another
  * board, perform moves in-place, and return a new board reflecting a specified move.
  */
-public class Board {
+public final class Board {
   int N;
   int exitXPosition;
   int exitYPosition;
@@ -200,7 +200,7 @@ public class Board {
 
   // Helper function to verify that all cars are entirely on the board and no two cars intersect
   // each other
-  private boolean validateCars() {
+  public boolean validateCars() {
     // Ensure that the board contains at least 1 car
     if (this.cars.size() < 1) {
       return false;
@@ -208,8 +208,14 @@ public class Board {
 
     // Ensure that every car is on the board
     for (Car c : this.cars) {
-      if (c.xPosition() - c.length() + 1 < 0 || c.xPosition() >= N) {
-        return false;
+      if (c.isHorizontal()) {
+        if (c.xPosition() - c.length() + 1 < 0 || c.xPosition() >= N) {
+          return false;
+        }
+      } else {
+        if (c.yPosition() - c.length() + 1 < 0 || c.yPosition() >= N) {
+          return false;
+        }
       }
     }
 

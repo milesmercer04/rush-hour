@@ -2,21 +2,23 @@ package com.rushhour;
 
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 public class DepthFirstSolver implements Solver {
   Board initialState;
   HashSet<Board> visited;
-  HashMap<Board, Board> priorState;
   Deque<Board> stack;
   
   public DepthFirstSolver(Board initialState) {
+    if (initialState == null) {
+      throw new IllegalArgumentException("Initial state cannot be null");
+    }
     this.initialState = initialState;
     this.visited = new HashSet<>();
     this.visited.add(initialState);
-    this.priorState.put(initialState, null);
+    this.stack = new LinkedList<>();
     this.stack.addFirst(initialState);
   }
 
@@ -39,7 +41,6 @@ public class DepthFirstSolver implements Solver {
           v = u.tryMove(i, true); // Try to move the ith car forward, then backward
           if (v != null && !visited.contains(v)) {
             visited.add(v);
-            priorState.put(v, u);
             stack.addFirst(u);
             stack.addFirst(v);
             break;
@@ -47,7 +48,6 @@ public class DepthFirstSolver implements Solver {
           v = u.tryMove(i, false); // Movind forward didn't work, try moving backward
           if (v != null && !visited.contains(v)) {
             visited.add(v);
-            priorState.put(v, u);
             stack.addFirst(u);
             stack.addFirst(v);
             break;
