@@ -1,6 +1,7 @@
 package com.rushhour;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +24,94 @@ public class BidirectionalHeuristicSolver implements Solver {
 
   @Override
   public List<Board> solveProblem() {
+    // Find the set of feasible winning states
+    HashSet<Board> winStates = feasibleWinStates();
+
+    // Check if the initial state is a win state
+    if (winStates.contains(initialState)) {
+      return List.of(initialState);
+    }
+
+    // Set of states visited from the initial state of the problem
+    HashSet<Board> visitedFromStart = new HashSet<>();
+    visitedFromStart.add(initialState);
+
+    // Set of states visited from a winning state of the game
+    HashSet<Board> visitedFromWinState = new HashSet<>();
+    visitedFromWinState.addAll(winStates);
+
+    // Map from board states to distances from initial state
+    HashMap<Board, Integer> distanceFromStart = new HashMap<>();
+    distanceFromStart.put(initialState, 0);
+
+    // Map from board states to distances from nearest win state
+    HashMap<Board, Integer> distanceFromWinState = new HashMap<>();
+    for (Board w : winStates) {
+      distanceFromWinState.put(w, 0);
+    }
+
+    // Map from board states to forward heuristic values
+    HashMap<Board, Integer> forwardHeuristic = new HashMap<>();
+    forwardHeuristic.put(initialState, initialState.minimumDistanceFrom(winStates));
+
+    // Map from board states to backward heuristic values
+    HashMap<Board, Integer> backwardHeuristic = new HashMap<>();
+    for (Board w : winStates) {
+      backwardHeuristic.put(w, w.distanceFrom(initialState));
+    }
+
+    // Map from states to their parents from initial state
+    HashMap<Board, Board> parentFromStart = new HashMap<>();
+    parentFromStart.put(initialState, null);
+
+    // Map from states to their parents from win state
+    HashMap<Board, Board> parentFromWinState = new HashMap<>();
+    for (Board w : winStates) {
+      parentFromWinState.put(w, null);
+    }
+
+    // Set of states reachable from initial state
+    HashSet<Board> reachableFromStart = new HashSet<>();
+    int numberOfCars = initialState.numberOfCars();
+    Board newState;
+    for (int i = 0; i < numberOfCars; i++) {
+      newState = initialState.tryMove(i, true);
+      if (newState != null && !visitedFromStart.contains(newState)) {
+        reachableFromStart.add(newState);
+        distanceFromStart.put(newState, 1);
+        forwardHeuristic.put(newState, newState.minimumDistanceFrom(winStates));
+        parentFromStart.put(newState, initialState);
+      }
+      newState = initialState.tryMove(i, false);
+      if (newState != null && !visitedFromStart.contains(newState)) {
+        reachableFromStart.add(newState);
+        distanceFromStart.put(newState, 1);
+        forwardHeuristic.put(newState, newState.minimumDistanceFrom(winStates));
+        parentFromStart.put(newState, initialState);
+      }
+    }
+
+    // Set of states reachable from a win state
+    HashSet<Board> reachableFromWinState = new HashSet<>();
+    for (Board w : winStates) {
+      for (int i = 0; i < numberOfCars; i++) {
+        newState = w.tryMove(i, true);
+        if (newState != null && !visitedFromWinState.contains(newState)) {
+          reachableFromWinState.add(newState);
+          distanceFromWinState.put(newState, 1);
+          backwardHeuristic.put(newState, newState.distanceFrom(initialState));
+          parentFromWinState.put(newState, w);
+        }
+        newState = w.tryMove(i, false);
+        if (newState != null && !visitedFromWinState.contains(newState)) {
+          reachableFromWinState.add(newState);
+          distanceFromWinState.put(newState, 1);
+          backwardHeuristic.put(newState, newState.distanceFrom(initialState));
+          parentFromWinState.put(newState, w);
+        }
+      }
+    }
+
     return new ArrayList<>();
   }
 
