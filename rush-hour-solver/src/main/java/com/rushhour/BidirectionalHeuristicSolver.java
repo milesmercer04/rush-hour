@@ -50,12 +50,36 @@ public class BidirectionalHeuristicSolver implements Solver {
     for (int i = 1; i < numberOfCars; i++) {
       newCar = new Car(initialState.cars().get(i));
       length = newCar.length();
-      if (newCar.isHorizontal()) {
-        newCar.changeXPosition(length - 1);
-      } else {
-        newCar.changeYPosition(length - 1);
+      boolean isHorizontal = newCar.isHorizontal();
+      // Iterate through all other cars to calculate front and back padding of new car
+      int frontPadding = 0;
+      int backPadding = 0;
+      for (Car c : initialState.cars()) {
+        if (c.equals(newCar)) {
+          continue;
+        }
+        if (isHorizontal && c.isHorizontal() && newCar.yPosition() == c.yPosition()) {
+          if (c.xPosition() > newCar.xPosition()) {
+            frontPadding += c.length();
+          } else {
+            backPadding += c.length();
+          }
+        } else if (!isHorizontal && !c.isHorizontal() && newCar.xPosition() == c.xPosition()) {
+          if (c.yPosition() > newCar.yPosition()) {
+            frontPadding += c.length();
+          } else {
+            backPadding += c.length();
+          }
+        }
       }
-      for (int d = 0; d <= N - length; d++) {
+      // Calculate wiggle room based on car's length, front padding, and back padding
+      int wiggleRoom = N - length - frontPadding - backPadding;
+      if (newCar.isHorizontal()) {
+        newCar.changeXPosition(backPadding + length - 1);
+      } else {
+        newCar.changeYPosition(backPadding + length - 1);
+      }
+      for (int d = 0; d <= wiggleRoom; d++) {
         for (Board b : incrementalWinStates.get(i - 1)) {
           newBoard = b.tryAddCar(newCar);
           if (newBoard != null) {
