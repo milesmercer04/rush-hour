@@ -1,13 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.rushhour.DepthFirstSolverTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.031 s <<< FAILURE! -- in com.rushhour.DepthFirstSolverTest
-com.rushhour.DepthFirstSolverTest.initialStateIsASolutionTest -- Time elapsed: 0.016 s <<< ERROR!
-java.lang.NullPointerException: Cannot invoke "java.util.HashMap.put(Object, Object)" because "this.priorState" is null
-	at com.rushhour.DepthFirstSolver.<init>(DepthFirstSolver.java:19)
-	at com.rushhour.DepthFirstSolverTest.createSolver(DepthFirstSolverTest.java:6)
-	at com.rushhour.SolverTest.initialStateIsASolutionTest(SolverTest.java:19)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.044 s -- in com.rushhour.DepthFirstSolverTest

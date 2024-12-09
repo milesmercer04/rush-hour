@@ -26,7 +26,7 @@ public class DepthFirstSolver implements Solver {
   public List<Board> solveProblem() {
     int numberOfCars = initialState.numberOfCars();
 
-    // Repeat until the stack is empty or until a win state is found
+    // Perform dfs until the stack is empty or until a win state is found
     Board u;
     Board v;
     boolean solutionFound = false;
@@ -61,8 +61,7 @@ public class DepthFirstSolver implements Solver {
       return new ArrayList<>();
     }
 
-    // Solution was found, find the certificate from the search tree priorState and return as a
-    // list from the initial state to the end state
+    // Solution was found, find the certificate from the stack and return it
     int solutionLength = stack.size();
     ArrayList<Board> solution = new ArrayList<>(solutionLength);
     for (int i = 0; i < solutionLength; i++) {
