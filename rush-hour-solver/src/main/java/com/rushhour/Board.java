@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Rush Hour Board, with default and explicit value constructor.
+ * Rush Hour Board, specified by size (N X N square grid), exit position (x and y coordinate on the
+ * perimeter of the square grid), and the positions of all cars on the board (x and y coordinates
+ * of the front of the car, the length of the car, and a boolean specifying whether the car is
+ * horizontal and vertical). The board is able to test its equality to and distance from another
+ * board, perform moves in-place, and return a new board reflecting a specified move.
  */
 public class Board {
   int N;
@@ -386,5 +390,10 @@ public class Board {
   // Getter function for cars list (returned by reference, modify with caution)
   public List<Car> cars() {
     return this.cars;
+  }
+
+  // Getter function for the number of cars on the board
+  public int numberOfCars() {
+    return this.cars.size();
   }
 }

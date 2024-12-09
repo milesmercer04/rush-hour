@@ -2,7 +2,12 @@ package com.rushhour;
 
 import java.util.Objects;
 
-
+/**
+ * Rush Hour Car, specified by the x and y position of the front of the car, its length, and a
+ * boolean value specifying whether the car is horizontal or vertical. The car can evaluate whether
+ * it collides with another car, calculate its distance from another car of compatible orientation,
+ * and move.
+ */
 public class Car {
   int xPosition;
   int yPosition;
