@@ -61,10 +61,10 @@ public class PerformanceTest {
     try {
       Constructor<T> constructor = solverClass.getConstructor(Board.class);
       // Start the timer
-      start = System.nanoTime();
+      start = System.currentTimeMillis();
       Solver s = constructor.newInstance(initialState);
       s.solveProblem();
-      end = System.nanoTime();
+      end = System.currentTimeMillis();
       return end - start;
     } catch (Exception e) {
       throw new RuntimeException("Failed to instantiate solver");
@@ -144,7 +144,7 @@ public class PerformanceTest {
     }
     XYSeries[] series = {s1, s2, s3};
     String title = "Time Performance of Solvers on 40 Puzzles";
-    String yAxisLabel = "Average Time (ns)";
+    String yAxisLabel = "Average Time (ms)";
     try {
       chart(series, title, yAxisLabel, "time_performance.png");
     } catch (Exception e) {
@@ -168,6 +168,12 @@ public class PerformanceTest {
     yAxisLabel = "Solution Length (total units of car displacement)";
     try {
       chart(series, title, yAxisLabel, "solution_lengths.png");
+    } catch (Exception e) {
+      throw new RuntimeException("Could not print solution length results");
+    }
+    XYSeries[] reducedSeries = {s2, s3};
+    try {
+      chart(reducedSeries, title, yAxisLabel, "solution_lengths_reduced.png");
     } catch (Exception e) {
       throw new RuntimeException("Could not print solution length results");
     }
