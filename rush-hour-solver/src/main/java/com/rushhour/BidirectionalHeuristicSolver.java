@@ -11,7 +11,6 @@ import java.util.PriorityQueue;
 
 public class BidirectionalHeuristicSolver implements Solver {
   Board initialState;
-  HashSet<Board> visited;
 
   public BidirectionalHeuristicSolver(Board initialState) {
     if (initialState == null) {
@@ -21,14 +20,17 @@ public class BidirectionalHeuristicSolver implements Solver {
       throw new IllegalArgumentException("Initial state contains a positional conflict");
     }
     this.initialState = initialState;
-    visited = new HashSet<>();
-    visited.add(initialState);
   }
 
   @Override
   public List<Board> solveProblem() {
     // Find the set of feasible winning states
     HashSet<Board> winStates = feasibleWinStates();
+
+    // If there are no feasible winning states, puzzle is unsolvable
+    if (winStates.isEmpty()) {
+      return new LinkedList<>();
+    }
 
     // Check if the initial state is a win state
     if (winStates.contains(initialState)) {
@@ -138,10 +140,17 @@ public class BidirectionalHeuristicSolver implements Solver {
         } else {
           return 1;
         }
-      } else {
-        if (distanceB == null) {
-          return -1;
+      } else if (distanceB == null) {
+        return -1;
+      }
+      if (heuristicA == null) {
+        if (heuristicB == null) {
+          return 0;
+        } else {
+          return 1;
         }
+      } else if (heuristicB == null) {
+        return -1;
       }
       return Integer.compare(distanceA + heuristicA, distanceB + heuristicB);
     };
@@ -167,10 +176,17 @@ public class BidirectionalHeuristicSolver implements Solver {
         } else {
           return 1;
         }
-      } else {
-        if (distanceB == null) {
-          return -1;
+      } else if (distanceB == null) {
+        return -1;
+      }
+      if (heuristicA == null) {
+        if (heuristicB == null) {
+          return 0;
+        } else {
+          return 1;
         }
+      } else if (heuristicB == null) {
+        return -1;
       }
       return Integer.compare(distanceA + heuristicA, distanceB + heuristicB);
     };
@@ -345,6 +361,7 @@ public class BidirectionalHeuristicSolver implements Solver {
     boolean newStateFound;
 
     // Mark all win states at this stage as visited, even if unfeasible
+    HashSet<Board> visited = new HashSet<>();
     for (Board b : winStates) {
       visited.add(b);
     }
