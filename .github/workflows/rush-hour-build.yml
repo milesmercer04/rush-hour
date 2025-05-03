@@ -22,5 +22,7 @@ jobs:
           cache: 'maven'
 
       - name: Compile with Maven
-        run: mvn clean compile
+        run: |
+          cd rush-hour-solver
+          mvn clean compile
       
