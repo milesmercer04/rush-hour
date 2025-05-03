@@ -64,5 +64,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: graphs
-          path: target/*.png
+          path: rush-hour-solver/target/*.png
       
