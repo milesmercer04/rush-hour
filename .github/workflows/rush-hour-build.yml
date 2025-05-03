@@ -58,7 +58,7 @@ jobs:
           cache: 'maven'
 
       - name: Execute with Maven
-        run: cd rush-hour-solver && mvn exec:java
+        run: cd rush-hour-solver && mvn compile exec:java
 
       - name: Archive graphs
         uses: actions/upload-artifact@v4
