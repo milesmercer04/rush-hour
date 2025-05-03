@@ -1,0 +1,7 @@
+com/rushhour/PerformanceTest.class
+com/rushhour/Board.class
+com/rushhour/BidirectionalHeuristicSolver.class
+com/rushhour/DepthFirstSolver.class
+com/rushhour/Car.class
+com/rushhour/BreadthFirstSolver.class
+com/rushhour/Solver.class

@@ -49,6 +49,13 @@
       <version>3.9</version>
     </dependency>
 
+    <!-- JCommon -->
+    <dependency>
+      <groupId>org.jfree</groupId>
+      <artifactId>jcommon</artifactId>
+      <version>1.0.24</version>
+    </dependency>
+
     <!-- JFreeChart -->
     <dependency>
       <groupId>org.jfree</groupId>
@@ -131,19 +138,6 @@
         </configuration>
       </plugin>
 
-      <!-- JAR Plugin with Manifest -->
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.4.2</version>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>com.rushhour.PerformanceTest</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-
       <!-- Surefire for tests -->
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -158,27 +152,66 @@
         <executions>
           <execution>
             <id>make-deb</id>
-            <phase>package</phase>
+            <phase>install</phase>
             <goals>
               <goal>jdeb</goal>
             </goals>
             <configuration>
-              <controlDir>${project.basedir}/src/deb/control</controlDir>
               <dataSet>
+                <!-- The .jar file -->
                 <data>
-                  <src>${project.build.directory}/${project.build.finalName}.jar</src>
+                  <src>${project.build.directory}/rush-hour-solver-1.0-SNAPSHOT.jar</src>
                   <type>file</type>
                   <mapper>
                     <type>perm</type>
-                    <prefix>/usr/share/${project.artifactId}</prefix>
+                    <prefix>/usr/share/rush-hour/rush-hour-solver</prefix>
+                    <filemode>644</filemode>
                   </mapper>
                 </data>
+
+                <!-- The wrapper script -->
+                <data>
+                  <src>${project.basedir}/src/deb/wrapper.sh</src>
+                  <type>file</type>
+                  <mapper>
+                    <type>perm</type>
+                    <prefix>/usr/share/rush-hour/rush-hour-solver</prefix>
+                    <filemode>755</filemode>
+                  </mapper>
+                </data>
+
+                <!-- Symlink -->
                 <data>
                   <type>link</type>
                   <linkName>/usr/bin/${project.artifactId}</linkName>
-                  <linkTarget>/usr/share/${project.artifactId}/${project.build.finalName}.jar</linkTarget>
+                  <linkTarget>/usr/share/rush-hour/rush-hour-solver/wrapper.sh</linkTarget>
                 </data>
               </dataSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Shade Plugin to create fat jar -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <id>shade-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <shadedArtifactAttached>false</shadedArtifactAttached>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>com.rushhour.PerformanceTest</mainClass>
+                </transformer>
+              </transformers>
             </configuration>
           </execution>
         </executions>

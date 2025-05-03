@@ -146,7 +146,7 @@ public class PerformanceTest {
     String title = "Time Performance of Solvers on 40 Puzzles";
     String yAxisLabel = "Average Time (ms)";
     try {
-      chart(series, title, yAxisLabel, "time_performance.png");
+      chart(series, title, yAxisLabel, "target/time_performance.png");
     } catch (Exception e) {
       throw new RuntimeException("Could not print time performance results");
     }
@@ -167,13 +167,13 @@ public class PerformanceTest {
     title = "Solution Length From Solvers on 40 Puzzles";
     yAxisLabel = "Solution Length (total units of car displacement)";
     try {
-      chart(series, title, yAxisLabel, "solution_lengths.png");
+      chart(series, title, yAxisLabel, "target/solution_lengths.png");
     } catch (Exception e) {
       throw new RuntimeException("Could not print solution length results");
     }
     XYSeries[] reducedSeries = {s2, s3};
     try {
-      chart(reducedSeries, title, yAxisLabel, "solution_lengths_reduced.png");
+      chart(reducedSeries, title, yAxisLabel, "target/solution_lengths_reduced.png");
     } catch (Exception e) {
       throw new RuntimeException("Could not print solution length results");
     }
