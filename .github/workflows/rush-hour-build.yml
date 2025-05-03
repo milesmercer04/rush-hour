@@ -69,7 +69,7 @@ jobs:
   build-jar:
     needs: test
     runs-on: ubuntu-latest
-    timeouut-minutes: 2
+    timeout-minutes: 2
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
