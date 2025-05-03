@@ -22,7 +22,7 @@ jobs:
           cache: 'maven'
 
       - name: Compile with Maven
-        run: cd rush-hour-solver && mvn compile
+        run: cd rush-hour-solver && mvn clean compile
 
   test:
     needs: build
@@ -40,7 +40,7 @@ jobs:
           cache: 'maven'
 
       - name: Test with Maven
-        run: cd rush-hour-solver && mvn test
+        run: cd rush-hour-solver && mvn clean test
 
   run:
     needs: build
@@ -58,11 +58,37 @@ jobs:
           cache: 'maven'
 
       - name: Execute with Maven
-        run: cd rush-hour-solver && mvn compile exec:java
+        run: cd rush-hour-solver && mvn clean compile exec:java
 
       - name: Archive graphs
         uses: actions/upload-artifact@v4
         with:
           name: graphs
           path: rush-hour-solver/target/*.png
+
+  build-jar:
+    needs: test
+    runs-on: ubuntu-latest
+    timeouut-minutes: 2
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Build JAR with Maven
+        run: cd rush-hour-solver && mvn clean package
+
+      - name: Archive JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: shaded-jar
+          path: |
+            rush-hour-solver/target/*.jar
+            !rush-hour-solver/target/original-*.jar
       
