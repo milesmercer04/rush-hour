@@ -1,0 +1,7 @@
+Package: rush-hour-solver
+Version: 1.0
+Section: java
+Priority: optional
+Architecture: all
+Maintainer: Miles Mercer <milesmercer04@gmail.com>
+Description: Three solvers for the Rush Hour puzzle game, written in Java.
