@@ -90,6 +90,33 @@ jobs:
           name: shaded-jar
           path: rush-hour-solver/target/rush-hour-solver*.jar
 
+  lint:
+    needs: build-jar
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Verify package with Maven
+        run: cd rush-hour-solver && mvn clean verify
+
+      - name: Generate human-readable output
+        run: cd rush-hour-solver && mvn site
+
+      - name: Archive site html pages
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-html
+          path: rush-hour-solver/target/site/*
+
   build-deb:
     needs: test
     runs-on: ubuntu-latest
@@ -113,6 +140,25 @@ jobs:
         with:
           name: deb-package
           path: rush-hour-solver/target/rush-hour-solver*.deb
+
+  lint-deb:
+    needs: build-deb
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt update && sudo apt install lintian
+
+      - name: Download deb package artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: deb-package
+
+      - name: Lint deb package
+        run: lintian rush-hour-solver*.deb || true
 
   install-deb:
     needs: build-deb

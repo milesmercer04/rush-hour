@@ -89,31 +89,6 @@
             </goals>
             <phase>none</phase> <!-- run it manually -->
           </execution>
-
-          <!-- New Lintian execution -->
-          <execution>
-            <id>lintian-deb</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>bash</executable>
-              <arguments>
-                <argument>-c</argument>
-                <argument>
-                  <![CDATA[
-                  DEB=$(find "${project.build.directory}" -name "${project.artifactId}_*.deb" | head -n 1)
-                  if [ -r "$DEB" ]; then
-                    lintian "$DEB" > "${project.build.directory}/lintian.log" 2>&1 || true
-                  else
-                    echo "No .deb package found." > "${project.build.directory}/lintian.log"
-                  fi
-                  ]]>
-                </argument>
-              </arguments>
-            </configuration>
-          </execution>
         </executions>
       </plugin>
 
